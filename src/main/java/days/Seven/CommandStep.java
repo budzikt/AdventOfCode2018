@@ -9,6 +9,8 @@ public class CommandStep implements Comparable<CommandStep>{
 
     public TreeMap<String, CommandStep> nextSteps;
 
+    public int timeToComplete;
+
     CommandStep(String stepID){
         this.stepID = stepID;
         nextSteps = new TreeMap<>();

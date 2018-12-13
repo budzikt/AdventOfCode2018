@@ -18,13 +18,11 @@ public class DaySevenMain {
 
         TreeMap<String, CommandStep> commands = new TreeMap<>();
 
-        Comparator<CommandStep> comStepComp = CommandStep.getComperator();
 
         Set<String> allCommandsIds = new TreeSet<>();
         Set<String> nonFirstSet = new TreeSet<>();
         Set<String> nonLastSet = new TreeSet<>();
 
-        CommandStepMenager csm = new CommandStepMenager();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(ff));
@@ -60,9 +58,14 @@ public class DaySevenMain {
 
             }
 
+
             Set<String> firstSet = new TreeSet<>(allCommandsIds);
             firstSet.removeAll(nonFirstSet);
             String idFirst = firstSet.iterator().next();
+            if(firstSet.size() > 1){
+                firstSet.remove(firstSet.iterator().next());
+            }
+
 
             Set<String> lastSet = new TreeSet<>(allCommandsIds);
             lastSet.removeAll(nonLastSet);
@@ -73,10 +76,12 @@ public class DaySevenMain {
 
             System.out.println("Parsed steps, up and running");
 
-            csm.processList(commands, firstCommand, lastCommand);
+            CommandStepMenager csm = new CommandStepMenager(commands);
+            csm.addFirstSteps(firstSet);
+            csm.processList(firstCommand, lastCommand);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 }
