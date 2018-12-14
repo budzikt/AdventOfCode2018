@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class DaySevenMain {
     public static void main(String[] args) {
@@ -17,7 +19,6 @@ public class DaySevenMain {
         File ff = new File(pathURL.getPath());
 
         TreeMap<String, CommandStep> commands = new TreeMap<>();
-
 
         Set<String> allCommandsIds = new TreeSet<>();
         Set<String> nonFirstSet = new TreeSet<>();
@@ -79,6 +80,14 @@ public class DaySevenMain {
             CommandStepMenager csm = new CommandStepMenager(commands);
             csm.addFirstSteps(firstSet);
             csm.processList(firstCommand, lastCommand);
+
+
+
+            /*Part 2*/
+            TimedCommandsMenager tcsm = new TimedCommandsMenager(commands, 5, 60);
+            firstSet.add("J");
+            tcsm.addFirstSteps(firstSet);
+            tcsm.processList(firstCommand, lastCommand);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,12 +7,16 @@ public class CommandStepMenager {
     public TreeSet<String> availableSteps;
     public TreeSet<String> alreadyCompletedSteps;
     public CommandStep lastStep;
-    public CommandStep firstStep;
     public TreeMap<String, CommandStep> commands;
 
-    CommandStepMenager(TreeMap<String, CommandStep> commands){
+    CommandStepMenager(){
         this.availableSteps = new TreeSet<>();
         this.alreadyCompletedSteps = new TreeSet<>();
+        this.commands = new TreeMap<>();
+    }
+
+    CommandStepMenager(TreeMap<String, CommandStep> commands){
+        this();
         this.commands = new TreeMap<>(commands);
     }
 
@@ -22,14 +26,14 @@ public class CommandStepMenager {
         String initId = commands.get(first.stepID).stepID;
         String path = processStep(first, initId);
         System.out.println(path);
-
     }
 
-    private String processStep(CommandStep current, String stepsPath) {
+
+    protected String processStep(CommandStep current, String stepsPath) {
         if(current != lastStep){
             alreadyCompletedSteps.add(current.stepID);
             buildAvailableStepsList(current);
-            String nextStepId = getNextStepId(current);
+            String nextStepId = getNextStepId();
             if(nextStepId == null){
                 System.out.println("Fuck");
             }
@@ -42,7 +46,7 @@ public class CommandStepMenager {
         }
     }
 
-    private void buildAvailableStepsList(CommandStep current) {
+    protected void buildAvailableStepsList(CommandStep current) {
         current.nextSteps.forEach((key, value) -> {
             if(!alreadyCompletedSteps.contains(key)){
                 this.availableSteps.add(key);
@@ -50,8 +54,7 @@ public class CommandStepMenager {
         });
     }
 
-    private boolean allPrescedingDone(CommandStep candidate) {
-
+    protected boolean allPrescedingDone(CommandStep candidate) {
         TreeSet<String> allPreviousSteps = new TreeSet<>();
         commands.forEach((key, val) -> {
             commands.get(key).nextSteps.forEach((nextKey, nextVal) ->{
@@ -72,8 +75,7 @@ public class CommandStepMenager {
         return retVal;
     }
 
-    private String getNextStepId(CommandStep current) {
-
+    protected String getNextStepId() {
         Iterator<String> availableStepsIter = availableSteps.iterator();
         String proposedNextId = null;
         while(availableStepsIter.hasNext()){
@@ -88,9 +90,11 @@ public class CommandStepMenager {
     }
 
     public void addFirstSteps(Set<String> FirstsIds){
-        FirstsIds.forEach(id -> {
-            this.availableSteps.add(id);
-        });
+        if(FirstsIds.size() > 0){
+            FirstsIds.forEach(id -> {
+                this.availableSteps.add(id);
+            });
+        }
     }
 
 }
